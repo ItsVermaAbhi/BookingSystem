@@ -5,6 +5,11 @@ require('dotenv').config();
 mn.connect(process.env.MONGO_URL)
 
 const packageScema = mn.Schema({
+    owner: {
+      type: mn.Schema.Types.ObjectId,
+      ref: 'Admin',
+      required: true
+    },
     title: {
         type: String,
         required: true,
@@ -13,6 +18,7 @@ const packageScema = mn.Schema({
         type: String,
         required: true,
       },
+
       price: {
         type: Number,
         required: true,
@@ -37,14 +43,14 @@ const packageScema = mn.Schema({
 
 const bookingInformationSchema = mn.Schema({
     packageId: {
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mn.Schema.Types.ObjectId, 
         ref: 'Package',
         required: true,
       },
       customerName: {
-        type: String,
-        required: true,
-        trim: true,
+        type: mn.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
       },
       email: {
         type: String,
@@ -78,7 +84,40 @@ const bookingInformationSchema = mn.Schema({
       },
 })
 
+const userSchema = mn.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    minLength: 6
+  }
+})
+
+const adminSchema = mn.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    minLength: 6
+  }
+})
+
+
 const Package = mn.model('Package', packageScema)
 const BookingInformation = mn.model('Booking', bookingInformationSchema)
+const user = mn.model('User', userSchema)
+const admin = mn.model('Admin', adminSchema)
 
 module.exports = {Package, BookingInformation}
